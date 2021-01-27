@@ -1,2 +1,2 @@
-web: ts-node index.ts
-worker: ts-node collector.ts
+web: yarn start
+worker: yarn collect
