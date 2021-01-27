@@ -5,6 +5,8 @@ import * as matchAll from "match-all"
 import * as fetch from "node-fetch"
 import * as moment from "moment"
 
+import { makePool } from "./pg_conn";
+
 dotenv.config();
 const TW_CONSUMER_KEY = process.env.TW_CONSUMER_KEY || "XXXXXXXXXXXXXXXXX";
 const TW_CONSUMER_SEC = process.env.TW_CONSUMER_SEC || "XXXXXXXXXXXXXXXXX";
@@ -22,7 +24,7 @@ const client = new Twitter({
 
 
 async function main() {
-  // TODO: init db connection
+  const pool = makePool()
 
   client.stream(
     "statuses/filter",
