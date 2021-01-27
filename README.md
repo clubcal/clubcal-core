@@ -2,9 +2,9 @@
 
 ## Set Up
 
-- Run `yarn`.
+- Run `yarn`
 - Create an `.env` file based on `.env.sample`
-- Apply `sql/schema.sql` to PostgreSQL DB defined in `.env`.
+- Apply `sql/schema.sql` to PostgreSQL DB defined in `.env`
 
 ## Run
 
