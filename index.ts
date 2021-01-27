@@ -6,8 +6,8 @@ import { makePool } from "./pg_conn"
 dotenv.config()
 
 const app = express()
-const HOST = process.env.API_SERVER_HOST || "0.0.0.0"
-const PORT = parseInt(process.env.API_SERVER_PORT || "8000", 10)
+const HOST = "0.0.0.0"
+const PORT = parseInt(process.env.PORT || "8000", 10)
 
 const pool = makePool()
 
