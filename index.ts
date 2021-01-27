@@ -1,8 +1,6 @@
 import * as dotenv from "dotenv";
 
 import * as Twitter from "twitter";
-import { google } from "googleapis";
-import { authorizeGoogle } from "./google_auth";
 import * as matchAll from "match-all"
 import * as fetch from "node-fetch"
 import * as moment from "moment"
@@ -24,8 +22,7 @@ const client = new Twitter({
 
 
 async function main() {
-  const sheets = google.sheets("v4");
-  const googleAuth = await authorizeGoogle();
+  // TODO: init db connection
 
   client.stream(
     "statuses/filter",
@@ -50,16 +47,7 @@ async function main() {
             const dateISO = moment(dateRoom, dateFormat).toISOString()
             const dateCal = moment(dateRoom, dateFormat).format("yyyyMMDDTHHmmss\\Z")
             const gcalLink = `https://calendar.google.com/calendar/r/eventedit?text=${encodeURI(nameRoom)}&dates=${encodeURI(dateCal)}/${encodeURI(dateCal)}&details=${encodeURI(descRoom)}+${encodeURI(linkRoom)}`
-            await sheets.spreadsheets.values.append({
-              spreadsheetId: process.env.GOOGLE_SPREADSHEET_ID,
-              range: "Sheet1!A:G",
-              auth: googleAuth,
-              valueInputOption: "RAW",
-              insertDataOption: "INSERT_ROWS",
-              requestBody: {
-                values: [[nameRoom, withRoom, descRoom, dateRoom, linkRoom, gcalLink, dateISO]],
-              },
-            });
+            // TODO: insert data into DB
           });
         }
       });

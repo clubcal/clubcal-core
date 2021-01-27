@@ -1,4 +1,4 @@
-# clubhouse.cal
+# clubcal-server
 
 ## Set Up
 
