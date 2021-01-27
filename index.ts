@@ -1,9 +1,12 @@
+import * as dotenv from "dotenv"
 import * as express from "express"
 
 import { makePool } from "./pg_conn"
 
+dotenv.config()
+
 const app = express()
-const PORT = 8080
+const PORT = process.env.API_SERVER_PORT || 8000
 
 const pool = makePool()
 
