@@ -1,2 +1,2 @@
 web: yarn start
-worker: yarn collect
+collector: yarn collect
