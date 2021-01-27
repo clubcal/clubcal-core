@@ -46,10 +46,19 @@ async function main() {
 
           fetchContent(match[0], async ({ nameRoom, withRoom, descRoom, dateRoom, linkRoom }) => {
             const dateFormat = "dddd MMMM DD HH:mma"
-            const dateISO = moment(dateRoom, dateFormat).toISOString()
-            const dateCal = moment(dateRoom, dateFormat).format("yyyyMMDDTHHmmss\\Z")
-            const gcalLink = `https://calendar.google.com/calendar/r/eventedit?text=${encodeURI(nameRoom)}&dates=${encodeURI(dateCal)}/${encodeURI(dateCal)}&details=${encodeURI(descRoom)}+${encodeURI(linkRoom)}`
-            // TODO: insert data into DB
+            const scheduledFor = moment(dateRoom, dateFormat)
+            // const dateISO = moment(dateRoom, dateFormat).toISOString()
+            // const dateCal = moment(dateRoom, dateFormat).format("yyyyMMDDTHHmmss\\Z")
+            // const gcalLink = `https://calendar.google.com/calendar/r/eventedit?text=${encodeURI(nameRoom)}&dates=${encodeURI(dateCal)}/${encodeURI(dateCal)}&details=${encodeURI(descRoom)}+${encodeURI(linkRoom)}`
+
+            pool.query('INSERT INTO ch_events (name, description, moderators, scheduled_for, link) VALUES ($1, $2, $3, $4, $5)',
+              [nameRoom, descRoom, withRoom, scheduledFor, linkRoom],
+              (error, results) => {
+                if (error) {
+                  throw error
+                }
+                console.log(`Event ${linkRoom} added with ID: ${results.insertId}`)
+              })
           });
         }
       });
