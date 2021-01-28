@@ -1,5 +1,6 @@
 import * as dotenv from "dotenv"
 import * as express from "express"
+import * as cors from "cors"
 
 import { makePool } from "./pg_conn"
 
@@ -10,6 +11,8 @@ const HOST = "0.0.0.0"
 const PORT = parseInt(process.env.PORT || "8000", 10)
 
 const pool = makePool()
+
+app.use(cors())
 
 app.get("/", (_, res) => res.send("Welcome to clubcal!"))
 
