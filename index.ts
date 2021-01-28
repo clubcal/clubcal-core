@@ -26,6 +26,20 @@ app.get("/events/", async (req, res) => {
   }
 })
 
+app.get("/events/summary/", async (req, res) => {
+  try {
+    const countResult = await pool.query("SELECT count(*) FROM ch_events")
+    const latestEventResult = await pool.query(
+      "SELECT created_on FROM ch_events ORDER BY created_on DESC LIMIT 1"
+    )
+    res
+      .status(200)
+      .json({ total: countResult.rows[0].count, lastUpdate: latestEventResult.rows[0].created_on })
+  } catch (error) {
+    res.status(500).json({ error })
+  }
+})
+
 app.listen(PORT, HOST, () => {
   console.log(`⚡️[server]: Server is running at ${HOST}:${PORT}`)
 })
