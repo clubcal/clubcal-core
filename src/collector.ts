@@ -3,6 +3,7 @@ import * as dotenv from "dotenv"
 import * as Twitter from "twitter"
 import * as matchAll from "match-all"
 import * as fetch from "node-fetch"
+import * as moment from "moment-timezone"
 
 import { makePool } from "./pg_conn"
 
@@ -17,6 +18,14 @@ const client = new Twitter({
   consumer_secret: TW_CONSUMER_SEC,
   access_token_key: TW_ACCESS_TOKEN_KEY,
   access_token_secret: TW_ACCESS_TOKEN_SEC
+})
+
+const zoneInfo = moment.tz.names().map((z) => {
+  let zone = moment.tz(z)
+  return {
+    abbr: zone.zoneAbbr(),
+    name: z
+  }
 })
 
 async function main() {
@@ -70,7 +79,11 @@ const parseRoomInfo = (body) => {
 
   const step_1 = fullDescRoom.match("(.*?).with")
   const step_2 = step_1[1].replace(",", "")
-  const dateRoom = step_2.replace("at ", "").replace("am", " am").replace("pm", " pm")
+  const dateStr = step_2.replace("at ", "")
+  const tzAbbr = dateStr.split(" ").pop().toUpperCase()
+  const dateRoom = moment
+    .tz(dateStr, "dddd MMMM DD HH:mmA ?", zoneInfo.filter((z) => z.abbr === tzAbbr)[0].name)
+    .format()
   const withRoom = fullDescRoom.substring(
     fullDescRoom.indexOf("with") + 5,
     fullDescRoom.indexOf(".")
@@ -81,7 +94,7 @@ const parseRoomInfo = (body) => {
     nameRoom,
     withRoom,
     descRoom,
-    dateRoom: new Date(Date.parse(dateRoom)),
+    dateRoom,
     linkRoom
   }
 }
