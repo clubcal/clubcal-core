@@ -77,7 +77,7 @@ const parseRoomInfo = (body) => {
 
   const nameRoom = new_data[3]
   const fullDescRoom = new_data[4]
-  const linkRoom = new_data[7]
+  const linkRoom = new_data[8]
 
   const step_1 = fullDescRoom.match("(.*?).with")
   const step_2 = step_1[1].replace(",", "")
