@@ -17,11 +17,16 @@ app.use(cors())
 app.get("/", (_, res) => res.send("Welcome to clubcal!"))
 
 app.get("/events/", async (req, res) => {
+  const offset = req.query.offset || "0"
   const limit = req.query.limit
+  const sqlParams = [offset]
+  if (limit) {
+    sqlParams.push(limit)
+  }
   try {
     const result = await pool.query(
-      `SELECT * FROM ch_events ORDER BY "ID" DESC ${limit ? "LIMIT $1" : ""}`,
-      limit ? [limit] : []
+      `SELECT * FROM ch_events ORDER BY "ID" DESC OFFSET $1 ${limit ? "LIMIT $2" : ""}`,
+      sqlParams
     )
     res.status(200).json(result.rows)
   } catch (error) {

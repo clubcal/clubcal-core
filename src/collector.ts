@@ -66,6 +66,8 @@ async function main() {
       })
     }
   )
+
+  runRoomCleaner(pool)
 }
 
 const parseRoomInfo = (body) => {
@@ -103,6 +105,16 @@ const fetchContent = (url, onComplete) => {
   fetch(url, { static: true })
     .then((response) => response.text())
     .then((text) => onComplete(parseRoomInfo(text)))
+}
+
+const runRoomCleaner = async (pool) => {
+  try {
+    await pool.query("DELETE FROM ch_events where scheduled_for < NOW() - interval '5 days'")
+  } catch (error) {
+    console.error(error)
+  }
+  // Continue running the room cleaner periodically (e.g. once every hour)
+  setTimeout(() => runRoomCleaner(pool), 1000 * 60 * 60)
 }
 
 main().catch((err) => {
